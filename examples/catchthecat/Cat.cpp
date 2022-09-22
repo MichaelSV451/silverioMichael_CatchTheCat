@@ -6,7 +6,11 @@ Point2D Cat::Move(World* world) {
   auto rand = Random::Range(0,5);
   auto pos = world->getCat();
 
-  //follow shortest path to exit
+  //create a graph of the hexagonal grid
+
+  //use pathfinding to get shortest route towards an exit point
+
+  //move towards that direction!
 
 
   switch(rand){
