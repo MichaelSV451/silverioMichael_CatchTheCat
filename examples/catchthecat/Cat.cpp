@@ -6,108 +6,178 @@
 
 using namespace std;
 
+
 Point2D Cat::Move(World* world) {
   auto rand = Random::Range(0, 5);
   auto pos = world->getCat();
-
-  const int DIRECTIONS = 5;
-
+  
+  //clear graph
+  graph.clear();
   visited.clear();
-  from.clear();
 
+  //create queue
   vector<QueueEntry> queue;
-  queue.push_back({pos, 0});
 
-  auto queueHead = queue[0];
+  //winning spaces
+  vector<QueueEntry> winningSpaces;
+
+  //path to take
+  vector<QueueEntry> pathToTake;
+
+  //make head of queue current pos
+  queue.push_back({Point2D(world->getCat()), 0});
+  //mark head as visited 
+  visited.push_back({Point2D(world->getCat()), 0});
 
   while (!queue.empty()) {
+        
+      QueueEntry source = queue.front();
+      queue.erase(queue.begin());
 
-    //sort queue
-    sort(queue.begin(), queue.end());
- 
-    queueHead = queue[0];
+      
+      //add to queue if its a valid position, its not blocked, AND its not visited
+      //Look NE
+      if (world->isValidPosition(World::NE(source.position)) && !world->getContent(World::NE(source.position)) && !CheckIfVisited(World::NE(source.position)))
+      {
+        queue.push_back({Point2D(World::NE(source.position)), source.weight +1});
+        visited.push_back(
+            {Point2D(World::NE(source.position)), source.weight + 1});
 
-    //remove head
-    queue.erase(queue.begin());
+        if (world->catWinsOnSpace(Point2D(World::NE(source.position))))
+          winningSpaces.push_back(
+              {Point2D(World::NE(source.position)), source.weight + 1});
+      }
+      // Look NW
+      if (world->isValidPosition(World::NW(source.position)) &&
+          !world->getContent(World::NW(source.position)) &&
+          !CheckIfVisited(World::NW(source.position))) {
+        queue.push_back(
+            {Point2D(World::NW(source.position)), source.weight + 1});
+        visited.push_back(
+            {Point2D(World::NW(source.position)), source.weight + 1});
 
-    //marked head visited
-    visited[queueHead.position.x][queueHead.position.y] = true;
+         if (world->catWinsOnSpace(Point2D(World::NW(source.position))))
+          winningSpaces.push_back(
+              {Point2D(World::NW(source.position)), source.weight + 1});
+      }
+      // Look W
+      if (world->isValidPosition(World::W(source.position)) &&
+          !world->getContent(World::W(source.position)) &&
+          !CheckIfVisited(World::W(source.position))) {
+        queue.push_back(
+            {Point2D(World::W(source.position)), source.weight + 1});
+        visited.push_back(
+            {Point2D(World::W(source.position)), source.weight + 1});
 
-    for (int i = 0; i <= DIRECTIONS; i++) {
-      Point2D search = {0, 0};
+         if (world->catWinsOnSpace(Point2D(World::W(source.position))))
+          winningSpaces.push_back(
+              {Point2D(World::W(source.position)), source.weight + 1});
+      }
+      // Look SW
+      if (world->isValidPosition(World::SW(source.position)) &&
+          !world->getContent(World::SW(source.position)) &&
+          !CheckIfVisited(World::SW(source.position))) {
+        queue.push_back(
+            {Point2D(World::SW(source.position)), source.weight + 1});
+        visited.push_back(
+            {Point2D(World::SW(source.position)), source.weight + 1});
 
-      //set search point
-      switch (i) {
-        case 0:
-          search = World::NE(queueHead.position);
-          break;
-        case 1:
-          search = World::NW(queueHead.position);
-          break;
-        case 2:
-          search = World::E(queueHead.position);
-          break;
-        case 3:
-          search = World::W(queueHead.position);
-          break;
-        case 4:
-          search = World::SW(queueHead.position);
-          break;
-        case 5:
-          search = World::SE(queueHead.position);
-          break;
+         if (world->catWinsOnSpace(Point2D(World::SW(source.position))))
+          winningSpaces.push_back(
+              {Point2D(World::SW(source.position)), source.weight + 1});
+      }
+      // Look SE
+      if (world->isValidPosition(World::SE(source.position)) &&
+          !world->getContent(World::SE(source.position)) &&
+          !CheckIfVisited(World::SE(source.position))) {
+        queue.push_back(
+            {Point2D(World::SE(source.position)), source.weight + 1});
+        visited.push_back(
+            {Point2D(World::SE(source.position)), source.weight + 1});
+
+         if (world->catWinsOnSpace(Point2D(World::SE(source.position))))
+          winningSpaces.push_back(
+              {Point2D(World::SE(source.position)), source.weight + 1});
+      }
+      // Look E
+      if (world->isValidPosition(World::E(source.position)) &&
+          !world->getContent(World::E(source.position)) &&
+          !CheckIfVisited(World::E(source.position))) {
+        queue.push_back(
+            {Point2D(World::E(source.position)), source.weight + 1});
+        visited.push_back(
+            {Point2D(World::E(source.position)), source.weight + 1});
+
+         if (world->catWinsOnSpace(Point2D(World::E(source.position))))
+          winningSpaces.push_back(
+              {Point2D(World::E(source.position)), source.weight + 1});
       }
 
-      //if not visited, and is valid position,
-      if (!world->getContent(search) && visited[search.x][search.y] == false && world->isValidPosition(search)) {
-
-          cout << "pushing back " << search.x << " , " << search.y << endl;
-
-          //add it to the queue
-          queue.push_back({search, queueHead.weight + 1});
-
-          //set from
-          from[search.x][search.y] = queueHead.position;
-      }
-    }
-
-    cout << queue.size() << endl;
   }
 
- ////clear the map
- //
- //
- ////start queue with position of the cat
- //vector<QueueEntry> queue;
- //
- //from[world->getCat().x][world->getCat().y] = world->getCat();
- //visited[world->getCat().x][world->getCat().y] = true;
- //queue.push_back({world->getCat(), 0});
- //
- ////main loop
- //while (!queue.empty()) {
- //  //sort from beginning to end
- //  sort(queue.begin(), queue.end());
- //
- //  //remove head
- //  queue.erase(queue.begin());
- //
- //  
- //
- //  cout << queue.size() << endl;
- //
- //
- //  //mark head as visited
- //
- //  //for each neighbor:
- //  //if not visited add to the queue with 1 weight
- //  //mark where this element comes from
- //}
+  //look through winning spaces to find lowest distance
+  QueueEntry bestWinningSpace;
+  int lowestDistance = INT_MAX;
+  for (int i = 0; i < winningSpaces.size(); i++) 
+      {
+    if (winningSpaces[i].weight < lowestDistance) {
+      bestWinningSpace = winningSpaces[i];
+      lowestDistance = winningSpaces[i].weight;
+    }   
+  }
+  
+  cout << "Best winning space is " << bestWinningSpace.position.x << ", "
+       << bestWinningSpace.position.y << " with a distance of "
+       << bestWinningSpace.weight << endl;
 
+  //now that we've got the best space, find the best path to it
+  vector<Point2D> neighbors;
 
-  //use pathfinding to get shortest route towards an exit point
+  //push back all of our neighbors if valid
+  if (world->isValidPosition(World::NE(pos)) && !world->getContent(World::NE(pos))) {
+    neighbors.push_back(World::NE(pos));
+  }
+  if (world->isValidPosition(World::NW(pos)) &&
+      !world->getContent(World::NW(pos))) {
+    neighbors.push_back(World::NW(pos));
+  }
+  if (world->isValidPosition(World::W(pos)) &&
+      !world->getContent(World::W(pos))) {
+    neighbors.push_back(World::W(pos));
+  }
+  if (world->isValidPosition(World::SW(pos)) &&
+      !world->getContent(World::SW(pos))) {
+    neighbors.push_back(World::SW(pos));
+  }
+  if (world->isValidPosition(World::SE(pos)) &&
+      !world->getContent(World::SE(pos))) {
+    neighbors.push_back(World::SE(pos));
+  }
+  if (world->isValidPosition(World::E(pos)) &&
+      !world->getContent(World::E(pos))) {
+    neighbors.push_back(World::E(pos));
+  }
 
-  //move towards that direction!
+  Point2D pointToGoTo;
+  int pointWeight = INT_MAX;
+
+  //Get weight of our neighbors, then go to lowest weighted point
+  for(int i = 0; i < neighbors.size(); i++) {
+    if (FindWeightOfPoint(neighbors[i]) < pointWeight) {
+        pointWeight = FindWeightOfPoint(neighbors[i]);
+      pointToGoTo = neighbors[i];
+    }
+  }
+
+  return pointToGoTo;
+
+  
+  //print winning spaces
+ // for (int i = 0; i < winningSpaces.size(); i ++) {
+ //   cout << winningSpaces[i].position.x << ", " << winningSpaces[i].position.y << endl;
+ //   cout << "Distance from source is " << winningSpaces[i].weight << endl;
+ // }
+ 
 
 
   switch(rand){
