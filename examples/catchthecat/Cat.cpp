@@ -126,9 +126,9 @@ Point2D Cat::Move(World* world) {
     }   
   }
   
-  cout << "Best winning space is " << bestWinningSpace.position.x << ", "
-       << bestWinningSpace.position.y << " with a distance of "
-       << bestWinningSpace.weight << endl;
+  //cout << "Best winning space is " << bestWinningSpace.position.x << ", "
+  //     << bestWinningSpace.position.y << " with a distance of "
+  //     << bestWinningSpace.weight << endl;
 
   //now that we've got the best space, find the best path to it
   vector<Point2D> neighbors;
@@ -158,10 +158,12 @@ Point2D Cat::Move(World* world) {
     neighbors.push_back(World::E(pos));
   }
 
+
   Point2D pointToGoTo;
   int pointWeight = INT_MAX;
 
   //Get weight of our neighbors, then go to lowest weighted point
+  //if there are more than 1 options with the same weight, add them to a list to pick randomly
   for(int i = 0; i < neighbors.size(); i++) {
     if (FindWeightOfPoint(neighbors[i]) < pointWeight) {
         pointWeight = FindWeightOfPoint(neighbors[i]);
