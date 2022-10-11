@@ -120,6 +120,10 @@ Point2D Catcher::Move(World* world) {
   if(!world->getContent(bestWinningSpace.position)) return bestWinningSpace.position;
 
   //else plug a position right next to the cat
+
+
+
+  //
   auto side = world->getWorldSideSize()/2;
   for(;;) {
     Point2D p = {Random::Range(-side, side), Random::Range(-side, side)};

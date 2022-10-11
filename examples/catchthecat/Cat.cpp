@@ -115,71 +115,97 @@ Point2D Cat::Move(World* world) {
 
   }
 
-  //look through winning spaces to find lowest distance
-  QueueEntry bestWinningSpace;
-  int lowestDistance = INT_MAX;
-  for (int i = 0; i < winningSpaces.size(); i++) 
-      {
-    if (winningSpaces[i].weight < lowestDistance) {
-      bestWinningSpace = winningSpaces[i];
-      lowestDistance = winningSpaces[i].weight;
-    }   
-  }
-  
-  //cout << "Best winning space is " << bestWinningSpace.position.x << ", "
-  //     << bestWinningSpace.position.y << " with a distance of "
-  //     << bestWinningSpace.weight << endl;
-
-  //now that we've got the best space, find the best path to it
-  vector<Point2D> neighbors;
-
-  //push back all of our neighbors if valid
-  if (world->isValidPosition(World::NE(pos)) && !world->getContent(World::NE(pos))) {
-    neighbors.push_back(World::NE(pos));
-  }
-  if (world->isValidPosition(World::NW(pos)) &&
-      !world->getContent(World::NW(pos))) {
-    neighbors.push_back(World::NW(pos));
-  }
-  if (world->isValidPosition(World::W(pos)) &&
-      !world->getContent(World::W(pos))) {
-    neighbors.push_back(World::W(pos));
-  }
-  if (world->isValidPosition(World::SW(pos)) &&
-      !world->getContent(World::SW(pos))) {
-    neighbors.push_back(World::SW(pos));
-  }
-  if (world->isValidPosition(World::SE(pos)) &&
-      !world->getContent(World::SE(pos))) {
-    neighbors.push_back(World::SE(pos));
-  }
-  if (world->isValidPosition(World::E(pos)) &&
-      !world->getContent(World::E(pos))) {
-    neighbors.push_back(World::E(pos));
-  }
-
-
-  Point2D pointToGoTo;
-  int pointWeight = INT_MAX;
-
-  //Get weight of our neighbors, then go to lowest weighted point
-  //if there are more than 1 options with the same weight, add them to a list to pick randomly
-  for(int i = 0; i < neighbors.size(); i++) {
-    if (FindWeightOfPoint(neighbors[i]) < pointWeight) {
-        pointWeight = FindWeightOfPoint(neighbors[i]);
-      pointToGoTo = neighbors[i];
+  if (winningSpaces.size() > 0) {
+    // look through winning spaces to find lowest distance
+    QueueEntry bestWinningSpace;
+    int lowestDistance = INT_MAX;
+    for (int i = 0; i < winningSpaces.size(); i++) {
+      if (winningSpaces[i].weight < lowestDistance) {
+        bestWinningSpace = winningSpaces[i];
+        lowestDistance = winningSpaces[i].weight;
+      }
     }
+
+    // now that we've got the best space, find the best path to it
+    vector<Point2D> neighbors;
+
+    // push back all of our neighbors if valid
+    if (world->isValidPosition(World::NE(pos)) &&
+        !world->getContent(World::NE(pos))) {
+      neighbors.push_back(World::NE(pos));
+    }
+    if (world->isValidPosition(World::NW(pos)) &&
+        !world->getContent(World::NW(pos))) {
+      neighbors.push_back(World::NW(pos));
+    }
+    if (world->isValidPosition(World::W(pos)) &&
+        !world->getContent(World::W(pos))) {
+      neighbors.push_back(World::W(pos));
+    }
+    if (world->isValidPosition(World::SW(pos)) &&
+        !world->getContent(World::SW(pos))) {
+      neighbors.push_back(World::SW(pos));
+    }
+    if (world->isValidPosition(World::SE(pos)) &&
+        !world->getContent(World::SE(pos))) {
+      neighbors.push_back(World::SE(pos));
+    }
+    if (world->isValidPosition(World::E(pos)) &&
+        !world->getContent(World::E(pos))) {
+      neighbors.push_back(World::E(pos));
+    }
+
+    Point2D pointToGoTo(0, 0);
+    double distanceCheck = INFINITY;
+
+    // Get weight of our neighbors, then go to lowest weighted point
+    // if there are more than 1 options with the same weight, add them to a list
+    // to pick randomly
+    for (int i = 0; i < neighbors.size(); i++) {
+      auto distance =
+          sqrt(pow((neighbors[i].x - bestWinningSpace.position.x), 2) +
+               pow((neighbors[i].y - bestWinningSpace.position.y), 2));
+
+      if (distanceCheck > distance) {
+        distanceCheck = distance;
+        pointToGoTo = neighbors[i];
+      }
+    }
+
+    return pointToGoTo;
+  } else {
+      //cat has lost! jump into a losing space
+
+    // push back all of our neighbors if valid
+    if (world->isValidPosition(World::NE(pos)) &&
+        world->getContent(World::NE(pos))) {
+      return World::NE(pos);
+    }
+    if (world->isValidPosition(World::NW(pos)) &&
+        world->getContent(World::NW(pos))) {
+      return World::NW(pos);
+    }
+    if (world->isValidPosition(World::W(pos)) &&
+        world->getContent(World::W(pos))) {
+      return World::W(pos);
+    }
+    if (world->isValidPosition(World::SW(pos)) &&
+        world->getContent(World::SW(pos))) {
+      return World::SW(pos);
+    }
+    if (world->isValidPosition(World::SE(pos)) &&
+        world->getContent(World::SE(pos))) {
+      return World::SE(pos);
+    }
+    if (world->isValidPosition(World::E(pos)) &&
+        world->getContent(World::E(pos))) {
+      return World::E(pos);
+    }
+    
+
   }
 
-  return pointToGoTo;
 
-  
-  //print winning spaces
- // for (int i = 0; i < winningSpaces.size(); i ++) {
- //   cout << winningSpaces[i].position.x << ", " << winningSpaces[i].position.y << endl;
- //   cout << "Distance from source is " << winningSpaces[i].weight << endl;
- // }
- 
 
 
   switch(rand){
