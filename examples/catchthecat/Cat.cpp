@@ -174,39 +174,66 @@ Point2D Cat::Move(World* world) {
 
     return pointToGoTo;
   } else {
-      //cat has lost! jump into a losing space
+    // cat has lost! try to run around
 
-    // push back all of our neighbors if valid
-    if (world->isValidPosition(World::NE(pos)) &&
-        world->getContent(World::NE(pos))) {
-      return World::NE(pos);
-    }
-    if (world->isValidPosition(World::NW(pos)) &&
-        world->getContent(World::NW(pos))) {
-      return World::NW(pos);
-    }
-    if (world->isValidPosition(World::W(pos)) &&
-        world->getContent(World::W(pos))) {
-      return World::W(pos);
-    }
-    if (world->isValidPosition(World::SW(pos)) &&
-        world->getContent(World::SW(pos))) {
-      return World::SW(pos);
-    }
-    if (world->isValidPosition(World::SE(pos)) &&
-        world->getContent(World::SE(pos))) {
-      return World::SE(pos);
-    }
-    if (world->isValidPosition(World::E(pos)) &&
-        world->getContent(World::E(pos))) {
-      return World::E(pos);
-    }
+    bool lost = true;
+    while (lost) {
+
+        int random = Random::Range(0, 5);
+
+      switch (random) {
+        case 0:
+          if (world->isValidPosition(World::NE(pos)) &&
+              !world->getContent(World::NE(pos))) {
+
+             
+
+            lost = false;
+            return World::NE(pos);
+          }
+        case 1:
+          if (world->isValidPosition(World::NW(pos)) &&
+              !world->getContent(World::NW(pos))) {
+
     
+            lost = false;
+            return World::NW(pos);
+          }
+        case 2:
+          if (world->isValidPosition(World::SW(pos)) &&
+              !world->getContent(World::SW(pos))) {
 
+            lost = false;
+            return World::SW(pos);
+          }  // x + 1
+        case 3:
+          if (world->isValidPosition(World::W(pos)) &&
+              !world->getContent(World::W(pos))) {
+
+
+            lost = false;
+            return World::W(pos);
+          }  // x - 1
+        case 4:
+          if (world->isValidPosition(World::SE(pos)) &&
+              !world->getContent(World::SE(pos))) {
+
+            lost = false;
+            return World::SE(pos);
+          }
+        case 5:
+          if (world->isValidPosition(World::E(pos)) &&
+              !world->getContent(World::E(pos))) {
+
+            lost = false;
+            return World::E(pos);
+          }
+        default: {
+        
+        }
+      }
+    }
   }
-
-
-
 
   switch(rand){
     case 0:

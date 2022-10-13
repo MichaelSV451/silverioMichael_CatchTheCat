@@ -5,7 +5,7 @@ using namespace std;
 
 Point2D Catcher::Move(World* world) {
 
-
+    cout << "catcher turn" << endl;
     
   auto pos = world->getCat();
 
@@ -107,7 +107,7 @@ Point2D Catcher::Move(World* world) {
   }
 
   // look through winning spaces to find lowest distance
-  QueueEntry bestWinningSpace;
+  QueueEntry bestWinningSpace = {pos, 1};
   int lowestDistance = INT_MAX;
   for (int i = 0; i < winningSpaces.size(); i++) {
     if (winningSpaces[i].weight < lowestDistance) {
@@ -117,21 +117,75 @@ Point2D Catcher::Move(World* world) {
   }
 
   //plug the best winning space IF ITS NOT ALREADY FULL
-  if(!world->getContent(bestWinningSpace.position)) return bestWinningSpace.position;
-
-  //else plug a position right next to the cat
-
-
-
-  //
-  auto side = world->getWorldSideSize()/2;
-  for(;;) {
-    Point2D p = {Random::Range(-side, side), Random::Range(-side, side)};
-    auto cat = world->getCat();
-    if(cat.x!=p.x && cat.y!=p.y && !world->getContent(p))
-      return p;
+  if (!world->getContent(bestWinningSpace.position) && bestWinningSpace.position != pos) {
+    cout << "plugging winning space" << endl;
+    return bestWinningSpace.position;
   }
+  else {
+    // plug random point that is a neighor around the cat
+    bool plug = false;
+    while (!plug) {
+      auto rand = Random::Range(0, 5);
+
+      switch (rand) {
+        case 0:
+          if (world->isValidPosition(World::NE(pos)) &&
+              !world->getContent(World::NE(pos))) {
+            plug = true;
+            return World::NE(pos);
+          }
+        case 1:
+          if (world->isValidPosition(World::NW(pos)) &&
+              !world->getContent(World::NW(pos))) {
+            plug = true;
+            return World::NW(pos);
+          }
+        case 2:
+          if (world->isValidPosition(World::SW(pos)) &&
+              !world->getContent(World::SW(pos))) {
+            plug = true;
+            return World::SW(pos);
+          }  // x + 1
+        case 3:
+          if (world->isValidPosition(World::W(pos)) &&
+              !world->getContent(World::W(pos))) {
+            plug = true;
+            return World::W(pos);
+          }  // x - 1
+        case 4:
+          if (world->isValidPosition(World::SE(pos)) &&
+              !world->getContent(World::SE(pos))) {
+            plug = true;
+            return World::SE(pos);
+          }
+        case 5:
+          if (world->isValidPosition(World::E(pos)) &&
+              !world->getContent(World::E(pos))) {
+            plug = true;
+            return World::E(pos);
+          }
+        default: {
+        }
+      }
+    }
+  
+  }
+ 
+
+ 
+
+  
 
 
+ ////
+ //auto side = world->getWorldSideSize()/2;
+ //for(;;) {
+ //  Point2D p = {Random::Range(-side, side), Random::Range(-side, side)};
+ //  auto cat = world->getCat();
+ //  if(cat.x!=p.x && cat.y!=p.y && !world->getContent(p))
+ //    return p;
+ //}
+
+  
 
 }
