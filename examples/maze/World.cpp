@@ -10,6 +10,8 @@ Node World::GetNode(const Point2D& point) {
 }
 void World::SetNode(const Point2D& point, const Node& node) {
   // todo implement this
+  auto index = Point2DtoIndex(point);
+  //data[index] = node.GetNorth();
 }
 void World::SetNorth(const Point2D& point, const bool& state) {
   // todo implement this
@@ -41,7 +43,7 @@ void World::OnGui(ImGuiContext *context){
               ImGui::GetIO().Framerate);
   static auto newSize = sideSize;
 
-  if(ImGui::SliderInt("Side Size", &newSize, 5, 29)) {
+  if(ImGui::SliderInt("Side Size", &newSize, 5, 100)) {
     newSize = (newSize/4)*4 + 1;
     if(newSize!=sideSize) {
       sideSize = newSize;
