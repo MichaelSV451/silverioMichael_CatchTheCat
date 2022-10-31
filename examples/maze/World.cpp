@@ -1,10 +1,12 @@
 #include "World.h"
 #include "generators/RecursiveBacktracker.h"
+#include "generators/HuntAndKill.h"
 #include <chrono>
 
 World::World(Engine* pEngine, int size=11): GameObject(pEngine), sideSize(size) {
   generators.push_back(new MazeGenerator());
   generators.push_back(new RecursiveBacktracker());
+  generators.push_back(new HuntAndKill());
 }
 
 World::~World(){
@@ -74,7 +76,7 @@ void World::OnGui(ImGuiContext *context){
               ImGui::GetIO().Framerate);
   static auto newSize = sideSize;
 
-  if(ImGui::SliderInt("Side Size", &newSize, 5, 29)) {
+  if(ImGui::SliderInt("Side Size", &newSize, 5, 100)) {
     newSize = (newSize/4)*4 + 1;
     if(newSize!=sideSize) {
       sideSize = newSize;
