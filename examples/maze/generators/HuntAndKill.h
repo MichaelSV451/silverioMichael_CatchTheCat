@@ -8,6 +8,7 @@
 
 class HuntAndKill : public MazeGeneratorBase {
  private:
+  std::string myName = "Hunt and Kill"; 
   int rowIndex;
   int colIndex;
   std::vector<Point2D> huntIndex;
@@ -21,7 +22,7 @@ class HuntAndKill : public MazeGeneratorBase {
 
  public:
   HuntAndKill() = default;
-  std::string GetName() override { return "Hunt and Kill"; };
+  std::string GetName() override { return myName; };
   bool Step(World* world) override;
   void Clear(World* world) override;
 };

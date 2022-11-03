@@ -7,6 +7,7 @@ bool HuntAndKill::Step(World* w) {
 
     //random start point
   if (stack.empty() && !hasStarted) {
+      myName = "Killing";
       auto sideOver2 = w->GetSize() / 2;
       rowIndex = -sideOver2;
       colIndex = -sideOver2;
@@ -20,7 +21,8 @@ bool HuntAndKill::Step(World* w) {
 
   if (stack.empty() && hasStarted) {
     auto sideOver2 = w->GetSize() / 2;
-    std::cout << "Hunting" << std::endl;
+    //std::cout << "Hunting" << std::endl;
+    myName = "Hunting";
 
     //loop through index of points,
     Point2D huntPoint = {rowIndex, colIndex};
@@ -35,6 +37,7 @@ bool HuntAndKill::Step(World* w) {
       for (int i = 0; i < huntIndex.size(); i++) {
         w->SetNodeColor(huntIndex[i], Color::Black.Dark());
       }
+      myName = "Hunt and Kill";
       return false;
     }
     w->SetNodeColor(huntPoint, Color::Yellow.Dark());
@@ -44,22 +47,34 @@ bool HuntAndKill::Step(World* w) {
         w->SetNodeColor(huntIndex[i], Color::Black.Dark());
       }
       stack.push_back(huntPoint);
-      if (rowIndex = -sideOver2) {
-        w->SetEast(huntPoint, false);
-      } else {
+
+
+      // set the wall
+        w->SetNorth(huntPoint, false);
         w->SetWest(huntPoint, false);
+
+
+      // set sides of wall to be true if this point is on the edge
+      if (colIndex == -sideOver2) {
+        w->SetNorth(huntPoint, true);
+        stack.push_back(huntPoint);
+      } else if (colIndex == sideOver2) {
+        w->SetSouth(huntPoint, true);
+        stack.push_back(huntPoint);
       }
-      
+
+      if (rowIndex == -sideOver2 + 1) {
+        w->SetWest(huntPoint, true);
+        stack.push_back(huntPoint);
+      } else if (rowIndex == -sideOver2) {
+        w->SetEast(huntPoint, true);
+        stack.push_back(huntPoint);
+      }
+
       w->SetNodeColor(huntPoint, Color::Green.Dark());
+      myName = "Killing";
     }
       
-    
-
-    //auto point = randomStartPoint(w);
-    //if (point.x == INT_MAX && point.y == INT_MAX)
-    //  return false;  // no empty space no fill
-    //stack.push_back(point);
-    //w->SetNodeColor(point, Color::Green.Dark());
   }
 
   // visit the current element
@@ -77,8 +92,8 @@ bool HuntAndKill::Step(World* w) {
     isHunting = true;
     huntIndex.clear();
     stack.clear();
-    std::cout << "end of visitables" << std::endl;
-    std::cout << hasStarted << std::endl;
+    //std::cout << "end of visitables" << std::endl;
+    //std::cout << hasStarted << std::endl;
     return true;
   } else {  // go deeper
     auto r = Random::Range(0, visitables.size() - 1);
@@ -97,49 +112,9 @@ bool HuntAndKill::Step(World* w) {
       w->SetWest(current, false);
     return true;
   }
-
-
-  // // check if we need to find a new starting point
-  // if (stack.empty()) {
-  //   auto point = randomStartPoint(w);
-  //   if (point.x == INT_MAX && point.y == INT_MAX)
-  //     return false;  // no empty space no fill
-  //   stack.push_back(point);
-  //   w->SetNodeColor(point, Color::Red.Dark());
-  // }
-  // 
-  // // visit the current element
-  // auto current = stack.back();
-  // visited[current.y][current.x] = true;
-  // w->SetNodeColor(current, Color::Red.Dark());
-  // 
-  // // check if we should go deeper
-  // std::vector<Point2D> visitables = getVisitables(w, current);
-  // 
-  // // if we should not go deep, pop one element from the stack
-  // if (visitables.empty()) {
-  //   stack.pop_back();
-  //   w->SetNodeColor(current, Color::Black);
-  //   return true;
-  // } else {  // go deeper
-  //   auto r = Random::Range(0, visitables.size() - 1);
-  //   auto next = visitables[r];
-  //   w->SetNodeColor(next, Color::Green);
-  //   stack.push_back(next);
-  //   auto delta = next - current;
-  //   // remove walls
-  //   if (delta.y == -1)  // north
-  //     w->SetNorth(current, false);
-  //   else if (delta.x == 1)  // east
-  //     w->SetEast(current, false);
-  //   else if (delta.y == 1)  // south
-  //     w->SetSouth(current, false);
-  //   else if (delta.x == -1)  // west
-  //     w->SetWest(current, false);
-  //   return true;
-  // }
 }
 void HuntAndKill::Clear(World* world) {
+  myName = "Hunt and Kill";
   hasStarted = false;
   huntIndex.clear();
   visited.clear();
