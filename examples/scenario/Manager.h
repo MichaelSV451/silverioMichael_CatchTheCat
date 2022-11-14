@@ -8,6 +8,9 @@
 
 class Manager: public GameObject {
  private:
+  float redistribution = 1.0;
+  float waterLevel = 0.1;
+  int octaves = 3;
   float accumulatedTime = 0;
   int sideSize=512;
   SDL_Texture *texture;

@@ -7,8 +7,8 @@
 Manager::Manager(Engine* engine, int size)
     : GameObject(engine) {
   // todo: add your generator here
-  generators.push_back(new RandomScenarioGenerator());
   generators.push_back(new MichaelGenerator());
+  generators.push_back(new RandomScenarioGenerator());
 }
 
 void Manager::SetPixels(std::vector<Color32> &input) {
@@ -77,11 +77,41 @@ void Manager::OnGui(ImGuiContext* context) {
               1000.0f / ImGui::GetIO().Framerate,
               ImGui::GetIO().Framerate);
   static auto newSize = sideSize;
+  static auto newRedistribution = redistribution;
+  static auto newWaterLevel = waterLevel;
+  static auto newOctaves = octaves;
 
   if(ImGui::SliderInt("Side Size", &newSize, 5, 2048)) {
     //newSize = (newSize/4)*4 + 1;
     if(newSize!=sideSize) {
       sideSize = newSize;
+      Clear();
+    }
+  }
+
+  if (ImGui::SliderInt("Octaves", &newOctaves, 1, 10)) {
+    // newSize = (newSize/4)*4 + 1;
+    if (newOctaves != octaves) {
+      octaves = newOctaves;
+      generators[generatorId]->SetOctaves(octaves);
+      Clear();
+    }
+  }
+
+  if (ImGui::SliderFloat("Redistribution", &newRedistribution, 0.01, 5.0)) {
+    // newSize = (newSize/4)*4 + 1;
+    if (newRedistribution != redistribution) {
+      redistribution = newRedistribution;
+      generators[generatorId]->SetRedistribution(redistribution);
+      Clear();
+    }
+  }
+
+  if (ImGui::SliderFloat("Water Level", &newWaterLevel, 0.01, 0.99)) {
+    // newSize = (newSize/4)*4 + 1;
+    if (newWaterLevel != waterLevel) {
+      waterLevel = newWaterLevel;
+      generators[generatorId]->SetWaterLevel(waterLevel);
       Clear();
     }
   }
@@ -122,6 +152,7 @@ void Manager::OnGui(ImGuiContext* context) {
     isSimulating = false;
   }
   ImGui::End();
+
 }
 void Manager::Update(float deltaTime) {
   if(isSimulating) {
