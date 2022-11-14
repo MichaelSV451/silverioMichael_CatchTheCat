@@ -1,12 +1,14 @@
 #include "World.h"
-#include "generators/RecursiveBacktracker.h"
 #include "generators/HuntAndKill.h"
+#include "generators/HuntAndKillExample.h"
+#include "generators/RecursiveBacktrackerExample.h"
 #include <chrono>
 
 World::World(Engine* pEngine, int size=11): GameObject(pEngine), sideSize(size) {
   generators.push_back(new MazeGenerator());
-  generators.push_back(new RecursiveBacktracker());
   generators.push_back(new HuntAndKill());
+  generators.push_back(new RecursiveBacktrackerExample());
+  generators.push_back(new HuntAndKillExample());
 }
 
 World::~World(){
