@@ -18,7 +18,8 @@ class Manager: public GameObject {
   float savannahLevel = 0.6;
   float mountainLevel = 0.8;
   float snowLevel = 1.1;
-  int octaves = 3;
+  float polarDistance = 8;
+  int octaves = 4;
   float accumulatedTime = 0;
   int sideSize=512;
   SDL_Texture *texture;

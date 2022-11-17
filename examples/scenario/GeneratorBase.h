@@ -14,9 +14,10 @@ class ScenarioGeneratorBase {
   float savannahLevel = 0.6;
   float mountainLevel = 0.8;
   float snowLevel = 2;
+  float polarDistance = 8;
   float x = 100;
   float y = 100;
-  int octaves = 3;
+  int octaves = 4;
 
  public:
   virtual std::vector<Color32> Generate(int sideSize, float displacement=0)=0;
@@ -32,6 +33,7 @@ class ScenarioGeneratorBase {
   virtual void SetMountainLevel(float newVal) { mountainLevel = newVal; }
   virtual void SetSnowLevel(float newVal) { snowLevel = newVal; }
   virtual void SetOctaves(int newval) { octaves = newval; }
+  virtual void SetPolarDistance(float newVal) { polarDistance = newVal; }
 };
 
 #endif  // SCENARIOGENERATORBASE_H

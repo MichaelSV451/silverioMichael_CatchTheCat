@@ -87,6 +87,7 @@ void Manager::OnGui(ImGuiContext* context) {
   static auto newSavannahLevel = savannahLevel;
   static auto newMountainLevel = mountainLevel;
   static auto newSnowLevel = snowLevel;
+  static auto newPolarDistance = polarDistance;
   static auto newOctaves = octaves;
 
   if(ImGui::SliderInt("Side Size", &newSize, 5, 2048)) {
@@ -114,7 +115,7 @@ void Manager::OnGui(ImGuiContext* context) {
     }
   }
 
-  if (ImGui::SliderInt("Octaves", &newOctaves, 1, 25)) {
+  if (ImGui::SliderInt("Octaves", &newOctaves, 1, 10)) {
     // newSize = (newSize/4)*4 + 1;
     if (newOctaves != octaves) {
       octaves = newOctaves;
@@ -191,6 +192,15 @@ void Manager::OnGui(ImGuiContext* context) {
     if (newSnowLevel != snowLevel) {
       snowLevel = newSnowLevel;
       generators[generatorId]->SetSnowLevel(snowLevel);
+      Clear();
+    }
+  }
+
+    if (ImGui::SliderFloat("Polar Distance", &newPolarDistance, 1, 20)) {
+    // newSize = (newSize/4)*4 + 1;
+    if (newPolarDistance != polarDistance) {
+      polarDistance = newPolarDistance;
+      generators[generatorId]->SetPolarDistance(polarDistance);
       Clear();
     }
   }

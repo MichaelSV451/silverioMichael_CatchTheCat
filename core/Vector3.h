@@ -19,6 +19,15 @@ struct Vector3 {
         this->y = y;
         this->z = z;
     }
+
+    Vector3 operator+(const Vector3& vector) {
+      Vector3 thisVec;
+      thisVec.x = this->x + vector.x;
+      thisVec.y = this->y + vector.y;
+      thisVec.z = this->z + vector.z;
+
+      return thisVec;
+    }
 };
 
 
