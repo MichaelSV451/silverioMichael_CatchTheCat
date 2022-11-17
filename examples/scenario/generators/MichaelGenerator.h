@@ -6,8 +6,8 @@
 class MichaelGenerator : public ScenarioGeneratorBase {
  private:
   //float waterLevel = 0.1;
-  float snowLevel = 0.8;
-  float mountainLevel = 0.5;
+  //float snowLevel = 0.8;
+  //float mountainLevel = 0.5;
 
 
  public:

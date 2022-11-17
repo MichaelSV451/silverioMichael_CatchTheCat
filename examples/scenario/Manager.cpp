@@ -77,8 +77,16 @@ void Manager::OnGui(ImGuiContext* context) {
               1000.0f / ImGui::GetIO().Framerate,
               ImGui::GetIO().Framerate);
   static auto newSize = sideSize;
+  static auto newX = x;
+  static auto newY = y;
   static auto newRedistribution = redistribution;
   static auto newWaterLevel = waterLevel;
+  static auto newBeachLevel = beachLevel;
+  static auto newGrassLevel = grassLevel;
+  static auto newForestLevel = forestLevel;
+  static auto newSavannahLevel = savannahLevel;
+  static auto newMountainLevel = mountainLevel;
+  static auto newSnowLevel = snowLevel;
   static auto newOctaves = octaves;
 
   if(ImGui::SliderInt("Side Size", &newSize, 5, 2048)) {
@@ -89,7 +97,24 @@ void Manager::OnGui(ImGuiContext* context) {
     }
   }
 
-  if (ImGui::SliderInt("Octaves", &newOctaves, 1, 10)) {
+  if (ImGui::SliderFloat("X Scale", &newX, 1.0, 500.0)) {
+    // newSize = (newSize/4)*4 + 1;
+    if (newX != x) {
+      x = newX;
+      generators[generatorId]->SetValX(x);
+      Clear();
+    }
+  }
+  if (ImGui::SliderFloat("Y Scale", &newY, 1.0, 500.0)) {
+    // newSize = (newSize/4)*4 + 1;
+    if (newY != y) {
+      y = newY;
+      generators[generatorId]->SetValX(y);
+      Clear();
+    }
+  }
+
+  if (ImGui::SliderInt("Octaves", &newOctaves, 1, 25)) {
     // newSize = (newSize/4)*4 + 1;
     if (newOctaves != octaves) {
       octaves = newOctaves;
@@ -98,7 +123,7 @@ void Manager::OnGui(ImGuiContext* context) {
     }
   }
 
-  if (ImGui::SliderFloat("Redistribution", &newRedistribution, 0.01, 5.0)) {
+  if (ImGui::SliderFloat("Redistribution", &newRedistribution, 0.01, 10.0)) {
     // newSize = (newSize/4)*4 + 1;
     if (newRedistribution != redistribution) {
       redistribution = newRedistribution;
@@ -107,11 +132,65 @@ void Manager::OnGui(ImGuiContext* context) {
     }
   }
 
-  if (ImGui::SliderFloat("Water Level", &newWaterLevel, 0.01, 0.99)) {
+  if (ImGui::SliderFloat("Water Level", &newWaterLevel, 0.01, beachLevel)) {
     // newSize = (newSize/4)*4 + 1;
     if (newWaterLevel != waterLevel) {
       waterLevel = newWaterLevel;
       generators[generatorId]->SetWaterLevel(waterLevel);
+      Clear();
+    }
+  }
+
+  if (ImGui::SliderFloat("Beach Level", &newBeachLevel, waterLevel, grassLevel)) {
+    // newSize = (newSize/4)*4 + 1;
+    if (newBeachLevel != beachLevel) {
+      beachLevel = newBeachLevel;
+      generators[generatorId]->SetBeachLevel(beachLevel);
+      Clear();
+    }
+  }
+
+  if (ImGui::SliderFloat("Grass Level", &newGrassLevel, beachLevel, forestLevel)) {
+    // newSize = (newSize/4)*4 + 1;
+    if (newGrassLevel != grassLevel) {
+      grassLevel = newGrassLevel;
+      generators[generatorId]->SetGrassLevel(grassLevel);
+      Clear();
+    }
+  }
+
+  if (ImGui::SliderFloat("Forest Level", &newForestLevel, grassLevel, savannahLevel)) {
+    // newSize = (newSize/4)*4 + 1;
+    if (newForestLevel != forestLevel) {
+      forestLevel = newForestLevel;
+      generators[generatorId]->SetForestLevel(forestLevel);
+      Clear();
+    }
+  }
+
+   if (ImGui::SliderFloat("Savannah Level", &newSavannahLevel, forestLevel, mountainLevel)) {
+    // newSize = (newSize/4)*4 + 1;
+     if (newSavannahLevel != savannahLevel) {
+      savannahLevel = newSavannahLevel;
+       generators[generatorId]->SetSavannahLevel(savannahLevel);
+      Clear();
+    }
+  }
+
+   if (ImGui::SliderFloat("Mountain Level", &newMountainLevel, savannahLevel, snowLevel)) {
+    // newSize = (newSize/4)*4 + 1;
+     if (newMountainLevel != mountainLevel) {
+      mountainLevel = newMountainLevel;
+       generators[generatorId]->SetMountainLevel(mountainLevel);
+      Clear();
+    }
+  }
+
+   if (ImGui::SliderFloat("Snow Level", &newSnowLevel, mountainLevel, 1.1)) {
+    // newSize = (newSize/4)*4 + 1;
+    if (newSnowLevel != snowLevel) {
+      snowLevel = newSnowLevel;
+      generators[generatorId]->SetSnowLevel(snowLevel);
       Clear();
     }
   }

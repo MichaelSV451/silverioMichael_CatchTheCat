@@ -8,8 +8,16 @@
 
 class Manager: public GameObject {
  private:
+  float x = 100;
+  float y = 100;
   float redistribution = 1.0;
   float waterLevel = 0.1;
+  float beachLevel = 0.2;
+  float grassLevel = 0.3;
+  float forestLevel = 0.4;
+  float savannahLevel = 0.6;
+  float mountainLevel = 0.8;
+  float snowLevel = 1.1;
   int octaves = 3;
   float accumulatedTime = 0;
   int sideSize=512;

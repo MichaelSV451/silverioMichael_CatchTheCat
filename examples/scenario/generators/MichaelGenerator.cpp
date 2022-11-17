@@ -7,35 +7,45 @@ std::vector<Color32> MichaelGenerator::Generate(int sideSize,
                                                        float displacement) {
   std::vector<Color32> colors;
 
-  Vector3 green = {0, 255, 0};
-  Vector3 white = {255, 255, 255};
-  Vector3 blue = {0, 0, 255};
+  //biome colors
+  Vector3 water = {0, 0, 255};
+  Vector3 beach = {255, 255, 200};
+  Vector3 grass = {0, 200, 100};
+  Vector3 forest = {0, 125, 50};
+  Vector3 savannah = {50, 125, 50};
+  Vector3 mountain = {100, 100, 100};
+  Vector3 snow = {255, 255, 255};
 
-  //   create your own function for noise generation
   siv::BasicPerlinNoise<float> noise;
   noise.reseed(1337);
 
-
-  //  Noise noise(1337, 1024,0,255);
   for (int l = 0; l < sideSize; l++) {
     for (int c = 0; c < sideSize; c++) {
      
-        float e = noise.octave3D(c / 75.0, l / 75.0, displacement, octaves);
+        //get noise and octaves
+        float e = noise.octave3D(c / x, l / y, displacement, octaves);
 
+        //set redistribution
         e = powf(e, redistribution);
 
-      if (e >= snowLevel)
-          colors.emplace_back(white.x, white.y, white.z);
-        else if (e < snowLevel && e >= mountainLevel)
-          colors.emplace_back(100, 100, 100);
-        else if (e < mountainLevel && e >= waterLevel)
-          colors.emplace_back(0, 255, 0);
-        else if (e < waterLevel)
-          colors.emplace_back(0, 0, 255);
+        //set biomes
+        if (e < waterLevel)
+          colors.emplace_back(water.x, water.y, water.z);
+        else if (e < beachLevel)
+          colors.emplace_back(beach.x, beach.y, beach.z);
+        else if (e < grassLevel)
+          colors.emplace_back(grass.x, grass.y, grass.z);
+        else if (e < forestLevel)
+          colors.emplace_back(forest.x, forest.y, forest.z);
+        else if (e < savannahLevel)
+          colors.emplace_back(savannah.x, savannah.y, savannah.z);
+        else if (e < mountainLevel)
+          colors.emplace_back(mountain.x, mountain.y, mountain.z);
+        else if (e <= snowLevel || e > snowLevel)
+          colors.emplace_back(snow.x, snow.y, snow.z);
         else {
-          colors.emplace_back(0, 0, 255);
+          colors.emplace_back(water.x, water.y, water.z);
         }
-          
 
     }
   }
